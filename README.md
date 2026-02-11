@@ -46,3 +46,7 @@ La puntata suggerita si basa sul `True Count` (TC):
 
 * **Disclaimer:** Questo strumento è puramente educativo e informativo. Il conteggio delle carte non garantisce vincite e il Blackjack è un gioco d'azzardo.
 * **Mazzi Rimanenti:** Il calcolo del True Count è estremamente preciso perché divide il *Running Count* per le carte rimanenti divise per 52, aggiornandosi a ogni carta.
+
+## 🚨🚨 Importante
+
+* **Testato su linux/windows; su altri sistemi operativi potrebbe non funzionare
