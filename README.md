@@ -49,4 +49,4 @@ La puntata suggerita si basa sul `True Count` (TC):
 
 ## 🚨🚨 Importante
 
-* **Testato su linux/windows; su altri sistemi operativi potrebbe non funzionare
+* Testato su linux/windows; su altri sistemi operativi potrebbe non funzionare
