@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hi-Lo Pro: Bet Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🃏 Hi-Lo Pro & Bet</h1>
+            <p>Tasti: 2-9, 0=10, J,Q,K,A | Frecce ↑↓: Mazzi | R: Reset</p>
+        </div>
+
+        <div class="main-stats">
+            <div class="stat-card">
+                <span class="stat-number" id="cardsOut">0/52</span>
+                <span class="stat-label">Uscite/Totali</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="truecount">0</span>
+                <span class="stat-label">True Count</span>
+            </div>
+        </div>
+
+        <div class="count-display">
+            <div id="display" class="running-count">0</div>
+            <div id="advice" class="advice">Attendi...</div>
+            <div id="suggested-bet" class="bet-display">Puntata: 1 Unità</div>
+        </div>
+
+        <div class="bet-settings">
+            <label>Unità Base (€): </label>
+            <input type="number" id="baseUnit" value="10" min="1">
+            <span> (Minima puntata al tavolo)</span>
+        </div>
+
+        <div class="probabilities" id="probSection" style="display: none;">
+            <div class="prob-grid" id="probGrid"></div>
+        </div>
+
+        <div class="cards-grid">
+            <button class="card-btn low" onclick="addCard(2)">2</button>
+            <button class="card-btn low" onclick="addCard(3)">3</button>
+            <button class="card-btn low" onclick="addCard(4)">4</button>
+            <button class="card-btn low" onclick="addCard(5)">5</button>
+            <button class="card-btn low" onclick="addCard(6)">6</button>
+            <button class="card-btn neutral" onclick="addCard(7)">7</button>
+            <button class="card-btn neutral" onclick="addCard(8)">8</button>
+            <button class="card-btn neutral" onclick="addCard(9)">9</button>
+            <button class="card-btn high" onclick="addCard(10)">10</button>
+            <button class="card-btn high" onclick="addCard(11)">J</button>
+            <button class="card-btn high" onclick="addCard(12)">Q</button>
+            <button class="card-btn high" onclick="addCard(13)">K</button>
+            <button class="card-btn high" onclick="addCard(1)">A</button>
+        </div>
+
+        <div class="controls">
+            <div class="deck-control">
+                Mazzi: <span id="deckDisplay" style="font-weight:bold; color:#00d4ff;">1</span>
+                <p style="font-size:0.7rem; color:#888;">Usa le frecce ↑ ↓ della tastiera</p>
+            </div>
+            <button class="reset-btn" onclick="resetCount()">🔄 RESET SESSIONE (R)</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
