@@ -71,25 +71,39 @@ function updateButtons() {
     });
 }
 
-function updateProbabilities(remaining) {
+ function updateProbabilities(remaining) {
     const probSection = document.getElementById('probSection');
     const probGrid = document.getElementById('probGrid');
     let probs = [];
 
+    // 1. Raccogliamo i dati di tutte le 13 carte
     for (let i = 1; i <= 13; i++) {
         let label = i === 1 ? 'A' : i === 11 ? 'J' : i === 12 ? 'Q' : i === 13 ? 'K' : i;
         let left = (numDecks * 4) - (cardsPlayed[i] || 0);
-        let p = (left / remaining) * 100;
-        probs.push({ label, p });
+        let p = remaining > 0 ? (left / remaining) * 100 : 0;
+
+        let typeClass = "neutral";
+        if (i === 1 || i >= 10) typeClass = "bad";  // Alte (Rosse)
+        else if (i >= 2 && i <= 6) typeClass = "good"; // Basse (Verdi)
+
+        probs.push({ label, p, left, typeClass });
     }
 
-    const top = probs.sort((a,b) => b.p - a.p).slice(0, 3);
-    probGrid.innerHTML = top.map(x => `
-        <div class="prob-item">${x.label}: <b>${x.p.toFixed(1)}%</b></div>
-    `).join('');
-    probSection.style.display = 'grid';
-}
+    // 2. ORDINAMENTO: Dalla probabilità più alta alla più bassa
+    probs.sort((a, b) => b.p - a.p);
 
+    // 3. Renderizzazione della griglia ordinata
+    probGrid.innerHTML = probs.map((x, index) => `
+        <div class="prob-item ${x.typeClass}" style="${index === 0 ? 'border: 1px solid var(--gold); transform: scale(1.05);' : ''}">
+            <span>${x.label}</span>
+            <b>${x.p.toFixed(1)}%</b>
+            <span class="prob-count">rimasti: ${x.left}</span>
+            ${index === 0 ? '<small style="color:var(--gold); font-size:0.5rem;">TOP</small>' : ''}
+        </div>
+    `).join('');
+    
+    probSection.style.display = 'block';
+}
 function resetCount() {
     runningCount = 0; cardsOut = 0; cardsPlayed = {};
     deckStats = getDeckStats(numDecks);
@@ -116,5 +130,16 @@ document.addEventListener('keydown', (e) => {
         else if (k === '1' || k === 'a') addCard(1);
     }
 });
+function resetCount() {
+            runningCount = 0;
+            cardsOut = 0;
+            lowOut = 0;
+            highOut = 0;
+            cardsPlayed = {};
+            deckStats = getDeckStats(numDecks);
+            updateDisplay();
+            updateButtons();
+            updateProbabilities();
+        }
 
 updateDisplay();
