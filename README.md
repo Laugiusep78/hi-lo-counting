@@ -9,7 +9,7 @@ Include una gestione automatica della puntata suggerita in base al **True Count*
 ## 🚀 Funzionalità
 
 * **Conteggio Hi-Lo:** Traccia il *Running Count* in tempo reale.
-* **True Count Automatico:** Calcola il *True Count* basandosi sui mazzi rimanenti effettivi (Formula: $RC / \text{Mazzi Rimanenti}$).
+* **True Count Automatico:** Calcola il *True Count* basandosi sui mazzi rimanenti effettivi.
 * **Bet Manager:** Calcola la puntata suggerita in unità di base in base al vantaggio attuale.
 * **Supporto Multi-mazzo:** Gestisce da 1 a 8 mazzi.
 * **Interfaccia Intuitiva:** Dark mode ottimizzata per la visibilità in ambienti poco illuminati.
