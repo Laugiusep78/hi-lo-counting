@@ -3,69 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hi-Lo Pro: Bet Manager</title>
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#0b0b0f">
+    <meta name="description" content="Hi-Lo Pro & Bet: card counter per il Blackjack con running count, true count, probabilità delle carte e puntata consigliata.">
+    <title>Hi-Lo Pro &amp; Bet — Card Counter Blackjack</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🃏</text></svg>">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🃏 Hi-Lo Pro & Bet</h1>
-            <p>Tasti: 2-9, 0=10, J,Q,K,A | Frecce ↑↓: Mazzi | R: Reset</p>
-        </div>
+    <main class="app">
+        <header class="app-header">
+            <h1><span class="logo" aria-hidden="true">🃏</span> Hi-Lo Pro <span class="amp">&amp;</span> Bet</h1>
+            <p class="tagline">Card counter Hi-Lo per il Blackjack · running count, true count e puntata</p>
+        </header>
 
-        <div class="main-stats">
+        <section class="stats" aria-label="Riepilogo">
             <div class="stat-card">
-                <span class="stat-number" id="cardsOut">0/52</span>
-                <span class="stat-label">Uscite/Totali</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number" id="truecount">0</span>
+                <span class="stat-number" id="trueCount">0,0</span>
                 <span class="stat-label">True Count</span>
             </div>
-        </div>
+            <div class="stat-card">
+                <span class="stat-number" id="cardsOut">0<small>/52</small></span>
+                <span class="stat-label">Carte uscite</span>
+            </div>
+            <div class="stat-card">
+                <div class="decks-control">
+                    <button type="button" class="icon-btn" id="deckMinus" aria-label="Riduci numero di mazzi">−</button>
+                    <span class="stat-number" id="deckCount">1</span>
+                    <button type="button" class="icon-btn" id="deckPlus" aria-label="Aumenta numero di mazzi">+</button>
+                </div>
+                <span class="stat-label">Mazzi</span>
+            </div>
+        </section>
 
-        <div class="count-display">
-            <div id="display" class="running-count">0</div>
-            <div id="advice" class="advice">Attendi...</div>
-            <div id="suggested-bet" class="bet-display">Puntata: 1 Unità</div>
-        </div>
+        <section class="count-panel" aria-label="Conteggio">
+            <span class="count-label">Running Count</span>
+            <div class="running-count" id="runningCount" data-tone="neutral" aria-live="polite">0</div>
+            <div class="advice" id="advice" data-tone="neutral">In attesa di carte…</div>
+            <div class="bet-display" id="suggestedBet" data-tone="neutral">
+                Puntata consigliata: <strong>10 €</strong> <span class="bet-units">(1 unità)</span>
+            </div>
+            <div class="penetration">
+                <div class="penetration-bar" id="penetrationBar" role="progressbar" aria-label="Carte uscite" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                    <span id="penetrationFill"></span>
+                </div>
+                <span class="penetration-label" id="penetrationLabel">Mazzo nuovo · 0% consumato</span>
+            </div>
+        </section>
 
-        <div class="bet-settings">
-            <label>Unità Base (€): </label>
-            <input type="number" id="baseUnit" value="10" min="1">
-            <span> (Minima puntata al tavolo)</span>
-        </div>
-
-        <div class="probabilities" id="probSection" style="display: none;">
+        <section class="probabilities" aria-label="Probabilità della prossima carta">
+            <div class="section-head">
+                <h2>Probabilità prossima carta</h2>
+                <span class="hint">dalla più probabile</span>
+            </div>
             <div class="prob-grid" id="probGrid"></div>
-        </div>
+        </section>
 
-        <div class="cards-grid">
-            <button class="card-btn low" onclick="addCard(2)">2</button>
-            <button class="card-btn low" onclick="addCard(3)">3</button>
-            <button class="card-btn low" onclick="addCard(4)">4</button>
-            <button class="card-btn low" onclick="addCard(5)">5</button>
-            <button class="card-btn low" onclick="addCard(6)">6</button>
-            <button class="card-btn neutral" onclick="addCard(7)">7</button>
-            <button class="card-btn neutral" onclick="addCard(8)">8</button>
-            <button class="card-btn neutral" onclick="addCard(9)">9</button>
-            <button class="card-btn high" onclick="addCard(10)">10</button>
-            <button class="card-btn high" onclick="addCard(11)">J</button>
-            <button class="card-btn high" onclick="addCard(12)">Q</button>
-            <button class="card-btn high" onclick="addCard(13)">K</button>
-            <button class="card-btn high" onclick="addCard(1)">A</button>
-        </div>
+        <section class="table" aria-label="Inserimento carte">
+            <div class="section-head">
+                <h2>Carte uscite</h2>
+                <span class="hint">clicca o usa la tastiera</span>
+            </div>
+            <div class="cards-grid" id="cardsGrid"></div>
+            <div class="table-actions">
+                <button type="button" class="action-btn" id="undoBtn" title="Annulla l'ultima carta (Backspace)">↶ Annulla</button>
+                <button type="button" class="action-btn danger" id="resetBtn" title="Azzera il conteggio (R)">⟲ Reset completo</button>
+            </div>
+        </section>
 
-        <div class="controls">
-            <div class="deck-control">
-                Mazzi: <span id="deckDisplay" style="font-weight:bold; color:#00d4ff;">1</span>
-                <p style="font-size:0.7rem; color:#888;">Usa le frecce ↑ ↓ della tastiera</p>
-                <div class="keyboard-help">
-            ⌨️ 2-9, 0=10, J Q K 1, R=Reset, ↑↓=Mazzi
-        </div>
-        <div>
-            <button class="reset-btn" onclick="resetCount()">🔄 Reset Completo</button>
-        </div>
+        <section class="settings" aria-label="Impostazioni">
+            <label for="baseUnit">Unità base (€)</label>
+            <div class="unit-input">
+                <button type="button" class="icon-btn" id="unitMinus" aria-label="Diminuisci unità base">−</button>
+                <input type="number" id="baseUnit" value="10" min="1" step="1" inputmode="decimal">
+                <button type="button" class="icon-btn" id="unitPlus" aria-label="Aumenta unità base">+</button>
+            </div>
+            <p class="hint">Puntata minima del tavolo</p>
+        </section>
+
+        <footer class="app-footer">
+            <p class="disclaimer">Strumento educativo: il Blackjack resta un gioco d'azzardo e nessun conteggio garantisce vincite.</p>
+            <div class="help">
+                <span><kbd>2</kbd>–<kbd>9</kbd> carte</span>
+                <span><kbd>0</kbd> dieci</span>
+                <span><kbd>J</kbd><kbd>Q</kbd><kbd>K</kbd><kbd>A</kbd> figure</span>
+                <span><kbd>↑</kbd><kbd>↓</kbd> mazzi</span>
+                <span><kbd>⌫</kbd> annulla</span>
+                <span><kbd>R</kbd> reset</span>
+            </div>
+        </footer>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script src="script.js"></script>
-    </body>
+</body>
 </html>

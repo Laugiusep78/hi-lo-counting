@@ -1,52 +1,121 @@
-# 🃏 Hi-Lo Pro Card Counter & Bet Manager
+# 🃏 Hi-Lo Pro & Bet
 
-Un'applicazione web leggera e veloce sviluppata in **JavaScript** per aiutare i giocatori di Blackjack a tenere traccia del conteggio delle carte utilizzando il sistema **Hi-Lo** con supporto multi-mazzo (da 1 a 8 mazzi francesi).
+Card counter per il **Blackjack**, leggero e senza dipendenze: HTML5, CSS3 e JavaScript puro.
+Tiene il **Running Count** con il sistema **Hi-Lo**, calcola il **True Count** e suggerisce la puntata in base al vantaggio stimato, con supporto da 1 a 8 mazzi.
 
-Include una gestione automatica della puntata suggerita in base al **True Count**.
+> ⚠️ Strumento educativo. Il Blackjack è un gioco d'azzardo: il conteggio delle carte non garantisce vincite.
 
+![Interfaccia di Hi-Lo Pro & Bet](docs/screenshot.png)
 
+## ✨ Funzionalità
 
-## 🚀 Funzionalità
+- **Conteggio Hi-Lo in tempo reale** — carte 2–6 `+1`, 7–9 `0`, 10/J/Q/K/A `−1`.
+- **True Count automatico** — Running Count diviso i mazzi effettivamente rimanenti.
+- **Bet Manager** — puntata consigliata in unità e in euro, con soglia di vantaggio.
+- **Probabilità della prossima carta** — tutte le 13 carte ordinate per probabilità, con quante copie restano.
+- **Barra di penetrazione** — percentuale del mazzo consumata e carte rimaste.
+- **Annulla ultima carta** — niente panico se si sbaglia un tasto.
+- **Salvataggio automatico** — conteggio, mazzi e unità base restano anche dopo un refresh (`localStorage`).
+- **Multi-mazzo** — da 1 a 8 mazzi, con reset automatico del conteggio al cambio mazzo.
+- **Responsive e accessibile** — layout mobile-first, focus visibile, etichette ARIA e rispetto di `prefers-reduced-motion`.
+- **Nessuna dipendenza** — basta aprire `index.html`.
 
-* **Conteggio Hi-Lo:** Traccia il *Running Count* in tempo reale.
-* **True Count Automatico:** Calcola il *True Count* basandosi sui mazzi rimanenti effettivi.
-* **Bet Manager:** Calcola la puntata suggerita in unità di base in base al vantaggio attuale.
-* **Supporto Multi-mazzo:** Gestisce da 1 a 8 mazzi.
-* **Interfaccia Intuitiva:** Dark mode ottimizzata per la visibilità in ambienti poco illuminati.
-* **Controlli da Tastiera:** Gestione rapida senza usare il mouse.
+## 🚀 Come utilizzarlo
 
-## 🛠️ Come utilizzarlo
+### In locale
 
-1.  Scarica i file `index.html`, `style.css` e `script.js`.
-2.  Mettili tutti nella stessa cartella.
-3.  Apri `index.html` con il tuo browser web preferito (Chrome, Firefox, Edge, etc.).
+1. Scarica o clona la repository.
+2. Apri `index.html` nel browser.
 
+In alternativa, se preferisci servirlo via HTTP:
 
+```bash
+python3 -m http.server 8000
+# poi apri http://localhost:8000
+```
 
-## ⌨️ Scorciatoie da Tastiera
+### GitHub Pages
+
+Nelle impostazioni della repository: **Settings → Pages → Deploy from a branch → `main` / root**.
+L'app è statica e non richiede build.
+
+## ⌨️ Scorciatoie da tastiera
 
 | Tasto | Azione |
 | :--- | :--- |
-| **2 - 9** | Registra carta di valore 2-9 |
-| **0** | Registra carta 10 |
-| **J, Q, K** | Registra Figure (-1) |
-| **A** | Registra Asso (-1) |
-| **↑ (Freccia Su)** | Aumenta numero di mazzi (Max 8) |
-| **↓ (Freccia Giù)** | Diminuisci numero di mazzi (Min 1) |
+| **2 – 9** | Registra una carta di valore 2–9 |
+| **0** | Registra un dieci |
+| **J, Q, K** | Registra una figura (−1) |
+| **A** o **1** | Registra un asso (−1) |
+| **↑ / ↓** | Aumenta / diminuisci il numero di mazzi (1–8) |
+| **⌫ Backspace** o **Canc** | Annulla l'ultima carta |
 | **R** | Reset completo del conteggio |
 
-## 📐 Logica del Bet Manager
+Le scorciatoie sono disattivate mentre si scrive nell'input dell'unità base.
 
-La puntata suggerita si basa sul `True Count` (TC):
+## 📐 Come funziona
 
-* **TC < 1.5:** Puntata minima (1 unità base).
-* **TC ≥ 1.5:** Punta `Math.floor(TC)` unità (es. se TC = 3.2, punta 3 unità).
+### Sistema Hi-Lo
 
-## 📄 Note
+| Carte | Valore Hi-Lo |
+| :--- | :---: |
+| 2, 3, 4, 5, 6 | **+1** |
+| 7, 8, 9 | **0** |
+| 10, J, Q, K, A | **−1** |
 
-* **Disclaimer:** Questo strumento è puramente educativo e informativo. Il conteggio delle carte non garantisce vincite e il Blackjack è un gioco d'azzardo.
-* **Mazzi Rimanenti:** Il calcolo del True Count è estremamente preciso perché divide il *Running Count* per le carte rimanenti divise per 52, aggiornandosi a ogni carta.
+Il **Running Count** è la somma dei valori Hi-Lo di tutte le carte uscite.
 
-## 🚨🚨 Importante
+### True Count
 
-* **Testato su linux/windows; su altri sistemi operativi potrebbe non funzionare.**
+```text
+True Count = Running Count / mazzi rimanenti
+mazzi rimanenti = carte rimanenti / 52
+```
+
+Il True Count viene mostrato con un decimale e normalizzato a `0,0` quando è vicino allo zero.
+
+### Bet Manager
+
+La puntata si basa sul True Count:
+
+| True Count | Puntata consigliata |
+| :--- | :--- |
+| **< 1,5** | 1 unità base (puntata minima) |
+| **≥ 1,5** | `max(1, floor(TC))` unità base |
+
+Esempio: con unità base da 10 € e True Count `3,2`, la puntata suggerita è `3 × 10 € = 30 €`.
+
+La soglia di vantaggio è indicata anche a livello visivo:
+
+- **TC ≥ 2** → vantaggio giocatore
+- **1,5 ≤ TC < 2** → vantaggio lieve
+- **−1 < TC < 1,5** → tavolo neutro
+- **TC ≤ −1** → banco favorito
+
+## 🗂️ Struttura del progetto
+
+```text
+hi-lo-counting/
+├── index.html          # Struttura dell'interfaccia
+├── style.css           # Tema scuro, layout responsive
+├── script.js           # Conteggio, statistiche, probabilità, bet manager
+├── docs/
+│   └── screenshot.png  # Anteprima dell'interfaccia
+└── README.md
+```
+
+## 💾 Dati salvati
+
+L'app salva in `localStorage` (chiave `hilo-pro-v1`):
+
+- numero di mazzi;
+- unità base;
+- carte giocate;
+- cronologia per l'undo.
+
+Il pulsante **Reset completo** azzera conteggio e cronologia, ma mantiene mazzi e unità base.
+Per ripartire da zero anche con le impostazioni, cancella i dati del sito dal browser.
+
+## 📄 Licenza
+
+Distribuito a scopo educativo e personale. Aggiungi una licenza esplicita se vuoi consentirne il riuso.
