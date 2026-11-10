@@ -115,7 +115,3 @@ L'app salva in `localStorage` (chiave `hilo-pro-v1`):
 
 Il pulsante **Reset completo** azzera conteggio e cronologia, ma mantiene mazzi e unità base.
 Per ripartire da zero anche con le impostazioni, cancella i dati del sito dal browser.
-
-## 📄 Licenza
-
-Distribuito a scopo educativo e personale. Aggiungi una licenza esplicita se vuoi consentirne il riuso.
